@@ -23,15 +23,15 @@ public:
 
     ulong region = 0x140000000;
 
-    ulong inAttack = 0x076782c8; //[Buttons] in_attack=0x076782c8
+    ulong inAttack = 0x07678368; //[Buttons] in_attack=0x076782c8
 
     ulong level = 0x1462450;//Miscellaneous LevelName=0x1462450
 
-    ulong localPlayer = 0x01ee8cb0 + 0x8; //0x1388eb8 //.?AVC_GameMovement@@=0x01ee8cb0
+    ulong localPlayer = 0x01ee8d58; //0x1388eb8 //.?AVC_GameMovement@@=0x01ee8cb0
 
-    ulong entityList = 0x1b37a78; //cl_entitylist=0x1b37938
+    ulong entityList = 0x1b37b18; //cl_entitylist=0x1b37938
 
-    ulong viewRender = 0x7677d20; //[Miscellaneous] ViewRender=0x7677288
+    ulong viewRender = 0x7677db8; //[Miscellaneous] ViewRender=0x7677288
     ulong viewMatrix = 0x11a210; //[Miscellaneous] ViewMatrix=0x11a210
 
     ulong lifeState = 0x0798; //m_lifeState=0x0798
@@ -48,7 +48,7 @@ public:
     ulong localOrigin = 0x0158; //m_localOrigin=0x0158
     ulong vecAbsOrigin = 0x014c; //m_vecAbsOrigin=0x014c
     ulong vecAbsVelocity = 0x0140; //[RecvTable.DT_BaseEntity] m_vecAbsVelocity
-    ulong bones = 0x0e98 + 0x48; //m_bConstrainBetweenEndpoints=0x0f50
+    ulong bones = 0x0e98 + 0x50 - 0x8; //m_bConstrainBetweenEndpoints=0x0f50 #
     ulong studioHdr = 0x10f0; //CBaseAnimating!m_pStudioHdr=0x10f0
     ulong cameraPosition = 0x1f48; //[Miscellaneous] CPlayer!camera_origin=0x1f48
     ulong cameraAngles = 0x1f54; //[Miscellaneous] CPlayer!camera_angles=0x1f54

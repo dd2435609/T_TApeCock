@@ -43,6 +43,16 @@ private:
     bool _espEnabled;
     float _espRangeInMeters;
 
+    bool _drawTracers;
+    float _tracersThickness;
+    Color _tracersColor;
+    Color _tracersColorVisible;
+
+    bool _drawFov;
+    float _fovRadius;
+    Color _fovColor;
+
+
 public:
     EspSettings() :
         _glowEnabled(true),
@@ -57,10 +67,44 @@ public:
         _glowMaxHealthColor(0.0f, 1.0f, 0.0f),
         _glowMinHealthColor(1.0f, 0.0f, 0.0f),
         _espEnabled(false),
+        _drawTracers(false),
+        _tracersThickness(1.0f),
+        _tracersColorVisible(0.0f, 1.0f, 0.0f),
+        _tracersColor(1.0f, 1.0f, 1.0f),
+        _drawFov(false),
+        _fovColor(1.0f, 0.0f, 0.0f),
         _espRangeInMeters(100) {}
 
     bool isGlowEnabled() const {
         return _glowEnabled;
+    }
+
+    Color fovColor() const {
+        return _fovColor;
+    }
+
+    float fovRadius() const {
+        return _fovRadius;
+    }
+
+    bool drawFov() const {
+        return _drawFov;
+    }
+
+    Color tracersColorVisible() const {
+        return _tracersColorVisible;
+    }
+
+    Color tracersColor() const {
+        return _tracersColor;
+    }
+
+    bool isTracersEnabled() const {
+        return _drawTracers;
+    }
+
+    float tracersThickness() const{
+        return _tracersThickness;
     }
 
     bool isGlowModeEnabled() const {
@@ -102,7 +146,7 @@ public:
     Color getGlowMinHealthColor() const {
         return _glowMinHealthColor;
     }
-     
+
     bool isEspEnabled() const {
         return _espEnabled;
     }
@@ -113,10 +157,20 @@ public:
 
     void render() {
         if(ImGui::BeginTabItem("ESP Settings")) {
+	    ImGui::Checkbox("Tracers", &_drawTracers);
+	    if (_drawTracers) {
+	       Renderer::renderImguiColorValue("Tracers Color Visible", "ESP", _tracersColorVisible);
+         Renderer::renderImguiColorValue("Tracers Color", "ESP", _tracersColor);
 
+               ImGui::SliderFloat("Tracers Thickness", &_tracersThickness, 0.5f, 5.f, "%.2f");
+               }
+            ImGui::Checkbox("FOV Circle", &_drawFov);
+            if (_drawFov) {
+               Renderer::renderImguiColorValue("FOV Color", "ESP", _fovColor);
+            }
             ImGui::Checkbox("Glow##ESP", &_glowEnabled);
             Renderer::renderImguiFloatValue("Glow range in meters", "ESP", &_glowRangeInMeters, 25.0f, 10000.0f, 1.0f, 50.0f);
-            
+
             const char* glowTypes[] = { "Dynamic color", "Static color", "Basic" };
             int glowType = static_cast<int>(_glowType);
             ImGui::Combo("Glow type##ESP", &glowType, glowTypes, IM_ARRAYSIZE(glowTypes));
@@ -124,7 +178,7 @@ public:
 
             if(_glowType != GlowType::BasicGlow) {
                 ImGui::Checkbox("Glow mode(sets transparen level and border size)##ESP", &_glowModeEnabled);
-                
+
                 if(_glowModeEnabled) {
                     int glowTransparentLevel = _glowTransparentLevel;
                     if(Renderer::renderImguiIntValue("Glow transparent level", "ESP", &glowTransparentLevel, 1.0, 255, 1, 10)) {
@@ -150,7 +204,6 @@ public:
 
             ImGui::Checkbox("Esp enabled##ESP", &_espEnabled);
             Renderer::renderImguiFloatValue("Esp range in meters", "ESP", &_espRangeInMeters, 25.0f, 500.0f, 1.0f, 25.0f);
-
             ImGui::EndTabItem();
         }
     }

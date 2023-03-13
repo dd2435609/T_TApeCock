@@ -1,5 +1,7 @@
 #pragma once
+
 #include <GL/gl.h>
+
 #include "../imgui/imgui.h"
 #include <algorithm>
 #include "../Math/Color.hpp"
@@ -10,6 +12,18 @@ class Renderer
 private:
 
 public:
+
+  static void drawLine(Vector2d start, Vector2d end, Color color, float width) {
+      glLineWidth(width);
+      glColor3f(color.r, color.g, color.b);
+
+      glBegin(GL_LINES);
+          glVertex2f(start.x, start.y);
+          glVertex2f(end.x, end.y);
+      glEnd();
+
+      glLineWidth(1.0f);
+  }
 
     static void drawRectangleOutline(Vector2d position, Vector2d size, Color color, float lineWidth) {
 
@@ -45,16 +59,16 @@ public:
 
     static bool renderImguiFloatValue(std::string label, std::string id, float* value, float min, float max, float slowStep, float fastStep) {
         const char* format = "%.3f";
-        
+
         std::string labelId = label + "##" + id;
         bool sliderResult = ImGui::SliderFloat(labelId.c_str(), value, min, max, format);
 
         ImGui::SameLine();
-        
+
         ImGui::PushItemWidth(100);
         std::string inputId = "##_" + id + "_" + id + label;
         bool inputResult = ImGui::InputFloat(inputId.c_str(), value, slowStep, fastStep, format);
-        ImGui::PopItemWidth(); 
+        ImGui::PopItemWidth();
 
         if(inputResult) {
             *value = std::clamp(*value, min, max);
@@ -64,16 +78,16 @@ public:
     }
 
     static bool renderImguiIntValue(std::string label, std::string id, int* value, int min, int max, int slowStep, int fastStep) {
-        
+
         std::string labelId = label + "##" + id;
         bool sliderResult = ImGui::SliderInt(labelId.c_str(), value, min, max);
 
         ImGui::SameLine();
-        
-        ImGui::PushItemWidth(100); 
+
+        ImGui::PushItemWidth(100);
         std::string inputId = "##_" + id + "_" + id + label;
         bool inputResult = ImGui::InputInt(inputId.c_str(), value, slowStep, fastStep);
-        ImGui::PopItemWidth(); 
+        ImGui::PopItemWidth();
 
         if(inputResult) {
             *value = std::clamp(*value, min, max);
@@ -96,7 +110,7 @@ public:
 
         if (ImGui::BeginPopup(popoutId.c_str())) {
             std::string pickerId = "##" + label + "_picker_" + id;
-            
+
             if(ImGui::ColorPicker3(pickerId.c_str(), (float*)&imColor)) {
                 color.r = imColor.x;
                 color.g = imColor.y;
@@ -105,6 +119,23 @@ public:
             }
             ImGui::EndPopup();
         }
+    }
+
+    static void drawFovCircle(Vector2d center, float radius, float fov, Color color, float lineWidth) {
+        int numSegments = 100;
+        float segmentAngle = fov / (float)(numSegments - 1);
+        float startAngle = -fov / 2.0f;
+        glLineWidth(lineWidth);
+        glColor3f(color.r, color.g, color.b);
+        glBegin(GL_LINE_STRIP);
+            for(int i = 0; i < numSegments; i++) {
+                float angle = startAngle + i * segmentAngle;
+                float x = center.x + radius * cosf(angle * M_PI / 180.0f);
+                float y = center.y + radius * sinf(angle * M_PI / 180.0f);
+                glVertex2f(x, y);
+            }
+        glEnd();
+        glLineWidth(1.0f);
     }
 
 };
