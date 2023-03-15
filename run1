@@ -1,0 +1,5 @@
+cd T_TApeCock
+./BuildAndRun.sh
+
+cd apex_cock
+./run
